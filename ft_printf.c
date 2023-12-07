@@ -3,14 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 16:21:49 by adebert           #+#    #+#             */
-/*   Updated: 2023/12/07 17:36:21 by adebert          ###   ########.fr       */
+/*   Updated: 2023/12/07 23:05:31 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+int	ft_len_int(int n, int sign)
+{
+	int	len_int;
+
+	len_int = 0;
+	if (n == 0)
+		len_int = 1;
+	if (sign == -1)
+		len_int++;
+	while (n > 0)
+	{
+		n /= 10;
+		len_int++;
+	}
+	return (len_int);
+}
 
 size_t  ft_strlen(const char *s)
 {
@@ -26,6 +43,9 @@ int    ft_putstr(char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (write(1, "(null)", 6));
+	
 	i = ft_strlen(s);
 	write(1, s, i);
     return (i);
@@ -33,36 +53,37 @@ int    ft_putstr(char *s)
 
 int    check_format(char c, va_list ap)
 {
-    int i;
+    int count;
 
-    i = 0;
+    count = 0;
     if (c == 's')
-        i = ft_putstr(va_arg(ap, char *));
-    else if (c == 'd' || c == 'i' || c == 'u')
-        i = ft_putnbr_decimal(va_arg(ap, int));
-    else if (c == 'x' || c == 'X' || c == 'p')
-    {
-        if (c == 'x' || c == 'p')
-            i = ft_putnbr_hexa_min(va_arg(ap, int));
-        if (c == 'X')
-            i = ft_putnbr_hexa_maj(va_arg(ap, int));
-    }
+        count = ft_putstr(va_arg(ap, char *));
+    else if (c == 'd' || c == 'i')
+        count = ft_putnbr_decimal(va_arg(ap, int));
+	else if (c == 'u')
+		count = ft_putnbr_unsigned(va_arg(ap, unsigned int));
+    else if (c == 'x' || c == 'p')
+		count = ft_putnbr_hexa(va_arg(ap, int), 0);
+	else if (c == 'X')
+		count = ft_putnbr_hexa(va_arg(ap, int), 1);
     else if (c == 'c')
-        i = ft_putchar(va_arg(ap, int));
+        count = ft_putchar(va_arg(ap, int));
     else if (c == '%')
-        i = write (1, "%", 1);
+        count = write (1, "%", 1);
     else
         return (0);
-    return (i + 1);
+    return (count);
 }
 
-int ft_printf(char *format, ...)
+int ft_printf(const char *format, ...)
 {
     va_list ap;
     int     i;
     int     count;
 
     va_start(ap, format);
+	if (!format)
+		return (-1);
     count = 0;
     i = 0;
     while(format[i])
@@ -72,28 +93,24 @@ int ft_printf(char *format, ...)
             count += check_format(format[i + 1], ap);
             i++;
         }
-        if (format[i])
-            write (1, &format[i], 1);
+        else
+		{
+			write (1, &format[i], 1);
+			count++;
+		}
         i++;
     }
     va_end(ap);
-    return (i);
+    return (count);
 }
 
-int main()
+/* int main()
 {
-    int test = -500;
+  int test = -500;
    //char c = '%';
     //char str[5] = "Hello";
 
-    int t_printf;
-    int t_ft_printf;
+   	printf("len = %d\n",ft_printf("%d", test));
 
-    t_printf = printf("PRINTF -> %u\n", test);
-
-    t_ft_printf = ft_printf("PRINTF -> %u\n", test);
-
-    printf("T_PRINTF -> %d\n", t_printf);
-    printf("T_FT_PRINTF -> %d\n", t_ft_printf);
     return (0);
-}
+} */

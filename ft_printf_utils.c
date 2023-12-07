@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
+/*   By: allan <allan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 13:19:47 by adebert           #+#    #+#             */
-/*   Updated: 2023/12/07 17:36:24 by adebert          ###   ########.fr       */
+/*   Updated: 2023/12/07 23:06:49 by allan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <unistd.h>
 
 int	ft_putchar(char c)
 {
@@ -19,18 +18,11 @@ int	ft_putchar(char c)
 	return (1);
 }
 
-int	ft_putnbr_decimal(int n, int i)
+int	ft_putnbr_unsigned(unsigned int n)
 {
 	char	c;
 
-	if (n == -2147483648)
-		write(1, "-2147483648", 11);
-	else if (n < 0)
-	{
-		write(1, "-", 1);
-		n *= -1;
-	}
-	if (n >= 0 && n <= 9)
+	if (n <= 9)
 	{
 		c = n + '0';
 		write(1, &c, 1);
@@ -40,49 +32,63 @@ int	ft_putnbr_decimal(int n, int i)
 		ft_putnbr_decimal(n / 10);
 		ft_putnbr_decimal(n % 10);
 	}
+	return (ft_len_int(n, 0));
 }
 
-int	ft_putnbr_hexa_min(int n, int i)
+int	ft_putnbr_decimal(int n)
 {
 	char	c;
+	int		sign;
+
+	sign = 0;
+	if (n == -2147483648)
+		write(1, "-2147483648", 11);
+	else if (n < 0)
+	{
+		write(1, "-", 1);
+		n *= -1;
+		sign = -1;
+	}
+	if (n <= 9)
+	{
+		c = n + '0';
+		write(1, &c, 1);
+	}
+	if (n > 9)
+	{
+		ft_putnbr_decimal(n / 10);
+		ft_putnbr_decimal(n % 10);
+	}
+	return (ft_len_int(n, sign));
+}
+
+int	ft_putnbr_hexa(int n, int caps)
+{
+	int		sign;
+
+	sign = 0;
 	if (n < 0)
 	{
 		write(1, "-", 1);
 		n *= -1;
+		sign = -1;
 	}
-	if (n > 15)
+	if (n >= 16)
 	{
-		ft_putnbr_hexa_min(n / 16);
-		ft_putnbr_hexa_min(n % 16);
+		ft_putnbr_hexa(n / 16, caps);
+		ft_putnbr_hexa(n % 16, caps);
 	}
 	else
 	{
-		if (n <= 9)
-			ft_putchar(n + '0');
-		else 
-			ft_putchar(n - 10 + 'a');
+			if (n <= 9)
+				ft_putchar(n + '0');
+			else
+			{
+				if (caps == 0)
+					ft_putchar(n - 10 + 'a');
+				else if (caps == 1)
+					ft_putchar(n - 10 + 'A');	
+			}
 	}
-}
-
-int	ft_putnbr_hexa_maj(int n, int i)
-{
-	char	c;
-
-	if (n < 0)
-	{
-		write(1, "-", 1);
-		n *= -1;
-	}
-	if (n > 15)
-	{
-		ft_putnbr_hexa_maj(n / 16);
-		ft_putnbr_hexa_maj(n % 16);
-	}
-	else
-	{
-		if (n <= 9)
-			ft_putchar(n + '0');
-		else 
-			ft_putchar(n - 10 + 'A');
-	}
+	return (ft_len_int(n, sign));
 }
