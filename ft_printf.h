@@ -6,7 +6,7 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:10:26 by adebert           #+#    #+#             */
-/*   Updated: 2023/12/08 14:37:15 by adebert          ###   ########.fr       */
+/*   Updated: 2023/12/08 15:43:30 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 #include <stdarg.h>
 
+int		            ft_check_ptr(unsigned long n);
 int                 ft_printf(const char *format, ...);
 int                 check_format(char c, va_list ap);
 size_t              ft_strlen(const char *s);

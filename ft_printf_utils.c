@@ -6,11 +6,13 @@
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 13:19:47 by adebert           #+#    #+#             */
-/*   Updated: 2023/12/08 14:48:41 by adebert          ###   ########.fr       */
+/*   Updated: 2023/12/08 15:43:31 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+int		check_ptr(unsigned long n);
 
 int	ft_putchar(char c)
 {
@@ -97,4 +99,19 @@ int		ft_putnbr_ptr(unsigned long n)
 			ft_putchar(n - 10 + 'a');
 	}
 	return (ft_len_hexa(n));
+}
+
+int	ft_check_ptr(unsigned long n)
+{
+	int		count;
+
+	count = 0;
+	if (n == 0)
+		return(write(1, "(nil)", 5));
+	else
+	{
+		count = write(1, "0x", 2);
+		count += ft_putnbr_ptr(n);
+	}
+	return (count);
 }
