@@ -1,6 +1,6 @@
 SRC_DIR = ./
 
-MY_SOURCES = ft_printf.c ft_printf_utils.c
+MY_SOURCES = ft_printf.c ft_printf_char.c ft_printf_int.c ft_printf_len_int.c
 MY_OBJECTS = $(MY_SOURCES:.c=.o)
 
 SRCS = $(addprefix $(SRC_DIR)/,$(MY_SOURCES))

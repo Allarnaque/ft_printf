@@ -1,24 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*   ft_printf_int.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adebert <adebert@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 13:19:47 by adebert           #+#    #+#             */
-/*   Updated: 2023/12/08 15:43:31 by adebert          ###   ########.fr       */
+/*   Updated: 2023/12/08 16:43:54 by adebert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-int		check_ptr(unsigned long n);
-
-int	ft_putchar(char c)
-{
-	write(1, &c, 1);
-	return (1);
-}
 
 unsigned int	ft_putnbr_unsigned(unsigned int n, int sign)
 {
@@ -71,20 +63,20 @@ int	ft_putnbr_hexa(unsigned int n, int caps)
 	}
 	else
 	{
-			if (n <= 9)
-				ft_putchar(n + '0');
-			else
-			{
-				if (caps == 0)
-					ft_putchar(n - 10 + 'a');
-				else if (caps == 1)
-					ft_putchar(n - 10 + 'A');
-			}
+		if (n <= 9)
+			ft_putchar(n + '0');
+		else
+		{
+			if (caps == 0)
+				ft_putchar(n - 10 + 'a');
+			else if (caps == 1)
+				ft_putchar(n - 10 + 'A');
+		}
 	}
 	return (ft_len_hexa(n));
 }
 
-int		ft_putnbr_ptr(unsigned long n)
+int	ft_putnbr_ptr(unsigned long n)
 {
 	if (n >= 16)
 	{
@@ -107,7 +99,7 @@ int	ft_check_ptr(unsigned long n)
 
 	count = 0;
 	if (n == 0)
-		return(write(1, "(nil)", 5));
+		return (write(1, "(nil)", 5));
 	else
 	{
 		count = write(1, "0x", 2);
